@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vai trò - Vnair Management</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .sidebar-brand h4 {
+            color: #495057;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            margin: 2px 12px;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .page-subtitle {
+            color: #6c757d;
+            margin: 8px 0 0 0;
+        }
+        
+        .stats-row {
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-left: 4px solid;
+        }
+        
+        .stat-card.active { border-left-color: #28a745; }
+        .stat-card.inactive { border-left-color: #6c757d; }
+        .stat-card.total { border-left-color: #007bff; }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 24px 0;
+        }
+        
+        .filter-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .table {
+            margin: 0;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+            color: #495057;
+            white-space: nowrap;
+        }
+        
+        .table td {
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        
+        .badge {
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+        
+        .pagination {
+            margin: 24px 0 0 0;
+            justify-content: center;
+        }
+        
+        .btn {
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 6px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="bi bi-airplane-engines"></i> Vnair</h4>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="/web/users/dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Người dùng
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/users" class="nav-link">
+                    <i class="bi bi-people"></i>
+                    Quản lý Người dùng
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/roles/dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Vai trò
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/roles" class="nav-link active">
+                    <i class="bi bi-shield-check"></i>
+                    Quản lý Vai trò
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/user-roles/dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Phân quyền
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/user-roles" class="nav-link">
+                    <i class="bi bi-person-check"></i>
+                    Quản lý Phân quyền
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Quản lý Vai trò</h1>
+            <p class="page-subtitle">Quản lý và theo dõi các vai trò trong hệ thống</p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row stats-row">
+            <div class="col-md-4">
+                <div class="stat-card total">
+                    <h3 class="stat-number" th:text="${totalElements ?: 0}">0</h3>
+                    <p class="stat-label">Tổng số vai trò</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card active">
+                    <h3 class="stat-number" th:text="${activeCount ?: 0}">0</h3>
+                    <p class="stat-label">Vai trò đang hoạt động</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card inactive">
+                    <h3 class="stat-number" th:text="${inactiveCount ?: 0}">0</h3>
+                    <p class="stat-label">Vai trò không hoạt động</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Card -->
+        <div class="content-card">
+            <h2 class="card-title">Danh sách Vai trò</h2>
+
+            <!-- Filters -->
+            <form method="get" class="filter-form">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Tìm kiếm</label>
+                        <input type="text" class="form-control" name="keyword" th:value="${keyword}" 
+                               placeholder="Tên vai trò, mô tả...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" name="isActive">
+                            <option value="">Tất cả</option>
+                            <option value="true" th:selected="${selectedIsActive == true}">Hoạt động</option>
+                            <option value="false" th:selected="${selectedIsActive == false}">Không hoạt động</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Sắp xếp theo</label>
+                        <select class="form-select" name="sortBy">
+                            <option value="id" th:selected="${sortBy == 'id'}">ID</option>
+                            <option value="name" th:selected="${sortBy == 'name'}">Tên</option>
+                            <option value="createdAt" th:selected="${sortBy == 'createdAt'}">Ngày tạo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Thứ tự</label>
+                        <select class="form-select" name="sortDir">
+                            <option value="asc" th:selected="${sortDir == 'asc'}">Tăng dần</option>
+                            <option value="desc" th:selected="${sortDir == 'desc'}">Giảm dần</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Số lượng</label>
+                        <select class="form-select" name="size">
+                            <option th:each="pageSize : ${pageSizes}" 
+                                    th:value="${pageSize}" 
+                                    th:text="${pageSize}"
+                                    th:selected="${pageSize == size}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary d-block">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" name="page" value="0">
+            </form>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên vai trò</th>
+                            <th>Mô tả</th>
+                            <th>Trạng thái</th>
+                            <th>Số người dùng</th>
+                            <th>Ngày tạo</th>
+                            <th>Cập nhật cuối</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="role : ${roles}">
+                            <td th:text="${role.id}">1</td>
+                            <td>
+                                <strong th:text="${role.name}">Admin</strong>
+                            </td>
+                            <td th:text="${role.description ?: 'Không có mô tả'}">Quản trị viên hệ thống</td>
+                            <td>
+                                <span th:if="${role.isActive}" class="badge bg-success">Hoạt động</span>
+                                <span th:unless="${role.isActive}" class="badge bg-secondary">Không hoạt động</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary" th:text="${role.userCount ?: 0}">0</span>
+                            </td>
+                            <td th:text="${#temporals.format(role.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</td>
+                            <td th:text="${#temporals.format(role.updatedAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a th:href="@{/api/roles/{id}(id=${role.id})}" 
+                                       class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a th:href="@{/web/user-roles/role/{id}(id=${role.id})}" 
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-people"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(roles)}">
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i><br>
+                                Không có vai trò nào được tìm thấy
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav th:if="${totalPages > 1}">
+                <ul class="pagination">
+                    <!-- First Page -->
+                    <li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+                        <a class="page-link" th:href="@{/web/roles(page=0, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword}, isActive=${selectedIsActive})}">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                    </li>
+                    
+                    <!-- Previous Page -->
+                    <li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+                        <a class="page-link" th:href="@{/web/roles(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword}, isActive=${selectedIsActive})}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    
+                    <!-- Page Numbers -->
+                    <li class="page-item" 
+                        th:each="pageNum : ${#numbers.sequence(T(java.lang.Math).max(0, currentPage - 2), T(java.lang.Math).min(totalPages - 1, currentPage + 2))}"
+                        th:classappend="${pageNum == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/web/roles(page=${pageNum}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword}, isActive=${selectedIsActive})}"
+                           th:text="${pageNum + 1}">1</a>
+                    </li>
+                    
+                    <!-- Next Page -->
+                    <li class="page-item" th:classappend="${isLast} ? 'disabled'">
+                        <a class="page-link" th:href="@{/web/roles(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword}, isActive=${selectedIsActive})}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    
+                    <!-- Last Page -->
+                    <li class="page-item" th:classappend="${isLast} ? 'disabled'">
+                        <a class="page-link" th:href="@{/web/roles(page=${totalPages - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword}, isActive=${selectedIsActive})}">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Info -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <small class="text-muted">
+                    Hiển thị <strong th:text="${#lists.size(roles)}">0</strong> 
+                    trên tổng số <strong th:text="${totalElements}">0</strong> vai trò
+                </small>
+                <small class="text-muted">
+                    Trang <strong th:text="${currentPage + 1}">1</strong> 
+                    / <strong th:text="${totalPages}">1</strong>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

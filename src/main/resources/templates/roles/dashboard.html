@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Vai trò - Vnair Management</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .sidebar-brand h4 {
+            color: #495057;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            margin: 2px 12px;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .page-subtitle {
+            color: #6c757d;
+            margin: 8px 0 0 0;
+        }
+        
+        .stats-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-left: 4px solid;
+            margin-bottom: 24px;
+        }
+        
+        .stats-card.total { border-left-color: #007bff; }
+        .stats-card.active { border-left-color: #28a745; }
+        .stats-card.inactive { border-left-color: #6c757d; }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            margin: 8px 0 0 0;
+            font-size: 14px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .badge {
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+        
+        .btn {
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        
+        .quick-actions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .quick-actions .btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="bi bi-airplane-engines"></i> Vnair</h4>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="/web/users/dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Người dùng
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/users" class="nav-link">
+                    <i class="bi bi-people"></i>
+                    Quản lý Người dùng
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/roles/dashboard" class="nav-link active">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Vai trò
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/roles" class="nav-link">
+                    <i class="bi bi-shield-check"></i>
+                    Quản lý Vai trò
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/user-roles/dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard Phân quyền
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/web/user-roles" class="nav-link">
+                    <i class="bi bi-person-check"></i>
+                    Quản lý Phân quyền
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Dashboard Vai trò</h1>
+            <p class="page-subtitle">Tổng quan về các vai trò trong hệ thống</p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card total">
+                    <h3 class="stat-number" th:text="${totalRoles ?: 0}">0</h3>
+                    <p class="stat-label">Tổng số vai trò</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card active">
+                    <h3 class="stat-number" th:text="${activeCount ?: 0}">0</h3>
+                    <p class="stat-label">Vai trò đang hoạt động</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card inactive">
+                    <h3 class="stat-number" th:text="${inactiveCount ?: 0}">0</h3>
+                    <p class="stat-label">Vai trò không hoạt động</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="content-card">
+            <h2 class="card-title">Thao tác nhanh</h2>
+            <div class="quick-actions">
+                <a href="/web/roles" class="btn btn-primary">
+                    <i class="bi bi-list"></i> Xem tất cả vai trò
+                </a>
+                <a href="/web/roles?isActive=true" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Vai trò đang hoạt động
+                </a>
+                <a href="/web/roles?isActive=false" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Vai trò không hoạt động
+                </a>
+                <a href="/api/roles" class="btn btn-info" target="_blank">
+                    <i class="bi bi-code"></i> API Roles
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Roles -->
+        <div class="content-card">
+            <h2 class="card-title">Vai trò gần đây</h2>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên vai trò</th>
+                            <th>Mô tả</th>
+                            <th>Trạng thái</th>
+                            <th>Số người dùng</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="role : ${recentRoles}">
+                            <td th:text="${role.id}">1</td>
+                            <td>
+                                <strong th:text="${role.name}">Admin</strong>
+                            </td>
+                            <td th:text="${role.description ?: 'Không có mô tả'}">Quản trị viên hệ thống</td>
+                            <td>
+                                <span th:if="${role.isActive}" class="badge bg-success">Hoạt động</span>
+                                <span th:unless="${role.isActive}" class="badge bg-secondary">Không hoạt động</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary" th:text="${role.userCount ?: 0}">0</span>
+                            </td>
+                            <td th:text="${#temporals.format(role.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a th:href="@{/api/roles/{id}(id=${role.id})}" 
+                                       class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a th:href="@{/web/user-roles/role/{id}(id=${role.id})}" 
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-people"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentRoles)}">
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i><br>
+                                Không có vai trò nào
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Active Roles -->
+        <div class="content-card" th:if="${!#lists.isEmpty(activeRoles)}">
+            <h2 class="card-title">Vai trò đang hoạt động</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3" th:each="role : ${activeRoles}">
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <h6 class="card-title" th:text="${role.name}">Role Name</h6>
+                            <p class="card-text small text-muted" th:text="${role.description ?: 'Không có mô tả'}">Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-success">
+                                    <i class="bi bi-people"></i>
+                                    <span th:text="${role.userCount ?: 0}">0</span> người dùng
+                                </small>
+                                <a th:href="@{/web/user-roles/role/{id}(id=${role.id})}" 
+                                   class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
