@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VNAIR User Management</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #6c757d;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .stats-card {
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/web/users/dashboard">
+                <i class="bi bi-people-fill me-2"></i>
+                VNAIR User Management
+            </a>
+            <div class="navbar-nav">
+                <div class="nav-item text-nowrap">
+                    <span class="navbar-text text-white">
+                        <i class="bi bi-person-circle me-1"></i>
+                        Admin User
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-fluid mt-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-speedometer2 me-2"></i>
+                Dashboard
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a href="/web/users" class="btn btn-primary me-2">
+                    <i class="bi bi-people me-1"></i>
+                    Quản lý User
+                </a>
+                <button type="button" class="btn btn-outline-secondary" onclick="refreshStats()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card text-white bg-primary h-100 stats-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-uppercase mb-1">Tổng số User</div>
+                                <div class="h4 mb-0" th:text="${totalUsers}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card text-white bg-success h-100 stats-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-uppercase mb-1">User Active</div>
+                                <div class="h4 mb-0" th:text="${activeCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card text-white bg-warning h-100 stats-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-uppercase mb-1">User Inactive</div>
+                                <div class="h4 mb-0" th:text="${inactiveCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-pause-circle-fill" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card text-white bg-danger h-100 stats-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-uppercase mb-1">User Suspended</div>
+                                <div class="h4 mb-0" th:text="${suspendedCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-x-circle-fill" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- User Statistics Chart -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Thống kê User theo Trạng thái
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="userStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Users -->
+            <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-clock me-2"></i>
+                            User Mới Nhất
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${recentUsers == null or recentUsers.isEmpty()}" class="text-center py-4 text-muted">
+                            <i class="bi bi-person-plus display-4 d-block mb-2"></i>
+                            <p>Chưa có user nào</p>
+                        </div>
+                        
+                        <div th:each="user, iterStat : ${recentUsers}" th:if="${recentUsers != null}" class="d-flex align-items-center py-2">
+                            <div class="user-avatar me-3" th:text="${user.username != null ? user.username.substring(0,1).toUpperCase() : 'U'}">U</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold" th:text="${user.username}">username</div>
+                                <small class="text-muted" th:text="${user.email}">email@example.com</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success" th:if="${user.status != null and user.status.name() == 'ACTIVE'}" th:text="${user.status}">ACTIVE</span>
+                                <span class="badge bg-warning text-dark" th:if="${user.status != null and user.status.name() == 'INACTIVE'}" th:text="${user.status}">INACTIVE</span>
+                                <span class="badge bg-danger" th:if="${user.status != null and user.status.name() == 'SUSPENDED'}" th:text="${user.status}">SUSPENDED</span>
+                                <span class="badge bg-secondary" th:if="${user.status != null and user.status.name() == 'DELETED'}" th:text="${user.status}">DELETED</span>
+                                <div>
+                                    <small class="text-muted" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM HH:mm') : ''}">01/01 10:00</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="/web/users" class="btn btn-sm btn-primary">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Xem tất cả User
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-lightning me-2"></i>
+                            Thao tác nhanh
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-3">
+                                <a href="/web/users" class="btn btn-outline-primary w-100 py-3">
+                                    <i class="bi bi-people display-6 d-block mb-2"></i>
+                                    <h6>Quản lý User</h6>
+                                    <small class="text-muted">Xem, thêm, sửa, xóa user</small>
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="/api/users/stats" target="_blank" class="btn btn-outline-info w-100 py-3">
+                                    <i class="bi bi-bar-chart display-6 d-block mb-2"></i>
+                                    <h6>API Stats</h6>
+                                    <small class="text-muted">Thống kê qua API</small>
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-outline-success w-100 py-3" onclick="exportUsers()">
+                                    <i class="bi bi-download display-6 d-block mb-2"></i>
+                                    <h6>Export Data</h6>
+                                    <small class="text-muted">Xuất dữ liệu user</small>
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-outline-warning w-100 py-3" onclick="refreshStats()">
+                                    <i class="bi bi-arrow-clockwise display-6 d-block mb-2"></i>
+                                    <h6>Refresh</h6>
+                                    <small class="text-muted">Cập nhật dữ liệu</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js and Dashboard Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            initUserStatusChart();
+        });
+        
+        function initUserStatusChart() {
+            const ctx = document.getElementById('userStatusChart').getContext('2d');
+            
+            const activeCount = /*[[${activeCount}]]*/ 0;
+            const inactiveCount = /*[[${inactiveCount}]]*/ 0;
+            const suspendedCount = /*[[${suspendedCount}]]*/ 0;
+            const deletedCount = /*[[${deletedCount}]]*/ 0;
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Inactive', 'Suspended', 'Deleted'],
+                    datasets: [{
+                        data: [activeCount, inactiveCount, suspendedCount, deletedCount],
+                        backgroundColor: [
+                            '#198754',
+                            '#ffc107', 
+                            '#dc3545',
+                            '#6c757d'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? ((context.raw / total) * 100).toFixed(1) : 0;
+                                    return context.label + ': ' + context.raw + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function refreshStats() {
+            location.reload();
+        }
+        
+        function exportUsers() {
+            alert('Tính năng Export sẽ được triển khai sau!');
+        }
+    </script>
+</body>
+</html>
