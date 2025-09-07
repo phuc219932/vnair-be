@@ -1,10 +1,18 @@
 package com.vnair.usermanagement.controller;
 
+import com.vnair.usermanagement.common.UserStatus;
 import com.vnair.usermanagement.dto.UserCreateRequestDTO;
 import com.vnair.usermanagement.dto.UserResponseDTO;
 import com.vnair.usermanagement.dto.UserUpdateRequestDTO;
-import com.vnair.usermanagement.entity.UserStatus;
 import com.vnair.usermanagement.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +31,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*")
+@Tag(name = "Quản lý người dùng", description = "API quản lý thông tin người dùng hệ thống")
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
     
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -173,6 +183,10 @@ public class UserController {
     }
     
     @GetMapping("/stats")
+    @Operation(summary = "Thống kê người dùng", 
+               description = "Lấy thống kê số lượng người dùng theo trạng thái")
+    @ApiResponse(responseCode = "200", 
+                description = "Thống kê thành công")
     public ResponseEntity<Map<String, Long>> getUserStats() {
         logger.info("GET /users/stats - Fetching user statistics");
         

@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.vnair.usermanagement.common.UserStatus;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,12 +34,37 @@ public class User {
     
     @Column(nullable = false)
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^[0-9+()-\\s]+$", message = "Invalid phone number format")
+    @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "Phone number must be in E.164 format (e.g., +1234567890)")
     private String phone;
     
     @Column(name = "password_hash", nullable = false)
     @NotBlank(message = "Password is required")
     private String passwordHash;
+    
+    @Column(name = "full_name", nullable = false)
+    @NotBlank(message = "Full name is required")
+    @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters")
+    private String fullName;
+    
+    @Column(name = "company_name")
+    @Size(max = 100, message = "Company name cannot exceed 100 characters")
+    private String companyName;
+    
+    @Column(name = "country_region", nullable = false)
+    @NotBlank(message = "Country/Region is required")
+    @Size(max = 50, message = "Country/Region cannot exceed 50 characters")
+    private String countryRegion;
+    
+    @Column(name = "tax_id")
+    @Size(max = 50, message = "Tax ID/Business ID cannot exceed 50 characters")
+    private String taxId;
+    
+    @Column(name = "user_role_type")
+    @Enumerated(EnumType.STRING)
+    private UserRoleType userRoleType;
+    
+    @Column(name = "agreed_to_terms", nullable = false)
+    private boolean agreedToTerms = false;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -58,11 +85,14 @@ public class User {
     // Constructors
     public User() {}
     
-    public User(String username, String email, String phone, String passwordHash) {
+    public User(String username, String email, String phone, String passwordHash, String fullName, String countryRegion, boolean agreedToTerms) {
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.passwordHash = passwordHash;
+        this.fullName = fullName;
+        this.countryRegion = countryRegion;
+        this.agreedToTerms = agreedToTerms;
     }
     
     // Getters and Setters
@@ -104,6 +134,54 @@ public class User {
     
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+    
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    public String getCompanyName() {
+        return companyName;
+    }
+    
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
+    public String getCountryRegion() {
+        return countryRegion;
+    }
+    
+    public void setCountryRegion(String countryRegion) {
+        this.countryRegion = countryRegion;
+    }
+    
+    public String getTaxId() {
+        return taxId;
+    }
+    
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
+    
+    public UserRoleType getUserRoleType() {
+        return userRoleType;
+    }
+    
+    public void setUserRoleType(UserRoleType userRoleType) {
+        this.userRoleType = userRoleType;
+    }
+    
+    public boolean isAgreedToTerms() {
+        return agreedToTerms;
+    }
+    
+    public void setAgreedToTerms(boolean agreedToTerms) {
+        this.agreedToTerms = agreedToTerms;
     }
     
     public UserStatus getStatus() {

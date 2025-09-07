@@ -1,4 +1,4 @@
-package com.vnair.usermanagement.entity;
+package com.vnair.usermanagement.common;
 
 public enum UserStatus {
     ACTIVE,

@@ -1,6 +1,7 @@
 package com.vnair.usermanagement.dto;
 
-import com.vnair.usermanagement.entity.UserStatus;
+import com.vnair.usermanagement.common.UserStatus;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

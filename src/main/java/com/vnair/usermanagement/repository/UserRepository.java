@@ -1,7 +1,8 @@
 package com.vnair.usermanagement.repository;
 
+import com.vnair.usermanagement.common.UserStatus;
 import com.vnair.usermanagement.entity.User;
-import com.vnair.usermanagement.entity.UserStatus;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,10 @@
 package com.vnair.usermanagement.service.impl;
 
+import com.vnair.usermanagement.common.UserStatus;
 import com.vnair.usermanagement.dto.UserCreateRequestDTO;
 import com.vnair.usermanagement.dto.UserResponseDTO;
 import com.vnair.usermanagement.dto.UserUpdateRequestDTO;
 import com.vnair.usermanagement.entity.User;
-import com.vnair.usermanagement.entity.UserStatus;
 import com.vnair.usermanagement.exception.DuplicateUserException;
 import com.vnair.usermanagement.exception.UserNotFoundException;
 import com.vnair.usermanagement.repository.UserRepository;

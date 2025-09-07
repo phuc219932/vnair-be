@@ -1,7 +1,7 @@
 package com.vnair.usermanagement.controller;
 
+import com.vnair.usermanagement.common.UserStatus;
 import com.vnair.usermanagement.dto.UserResponseDTO;
-import com.vnair.usermanagement.entity.UserStatus;
 import com.vnair.usermanagement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

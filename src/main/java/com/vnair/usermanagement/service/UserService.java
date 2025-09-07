@@ -1,9 +1,10 @@
 package com.vnair.usermanagement.service;
 
+import com.vnair.usermanagement.common.UserStatus;
 import com.vnair.usermanagement.dto.UserCreateRequestDTO;
 import com.vnair.usermanagement.dto.UserResponseDTO;
 import com.vnair.usermanagement.dto.UserUpdateRequestDTO;
-import com.vnair.usermanagement.entity.UserStatus;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

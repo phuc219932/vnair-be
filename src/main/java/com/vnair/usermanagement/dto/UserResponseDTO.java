@@ -1,8 +1,8 @@
 package com.vnair.usermanagement.dto;
 
-import com.vnair.usermanagement.entity.UserStatus;
-
 import java.time.LocalDateTime;
+
+import com.vnair.usermanagement.common.UserStatus;
 
 public class UserResponseDTO {
     
